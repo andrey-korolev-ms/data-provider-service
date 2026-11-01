@@ -27,3 +27,18 @@ func (s *GrpcServer) SayHello(ctx context.Context, req *greetv1.HelloRequest) (*
 	}
 	return &greetv1.HelloReply{Message: msg}, nil
 }
+func (s *GrpcServer) ManyHellos(req *greetv1.ManyHellosRequest, stream greetv1.GreeterService_ManyHellosServer) error {
+	log.Printf("Запуск стрима для name: %s, count %d", req.GetName(), req.NumReplies)
+	// получаем данные из бизнес-логики
+	messages, err := s.uc.HandleManyHellos(stream.Context(), req.GetName(), int(req.NumReplies))
+	if err != nil {
+		return status.Error(codes.InvalidArgument, err.Error())
+	}
+	for _, msg := range messages {
+		reply := &greetv1.HelloReply{Message: msg}
+		if err := stream.Send(reply); err != nil {
+			return status.Errorf(codes.Canceled, "client canceled stream: %v", err)
+		}
+	}
+	return nil
+}
