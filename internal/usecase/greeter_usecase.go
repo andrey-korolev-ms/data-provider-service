@@ -16,8 +16,8 @@ type greeterUsecase struct {
 	repo domain.Greeter
 }
 
-func NewGreeterUsecase() *greeterUsecase {
-	return &greeterUsecase{}
+func NewGreeterUsecase(repo domain.Greeter) *greeterUsecase {
+	return &greeterUsecase{repo: repo}
 }
 func (u *greeterUsecase) HandleSayHello(ctx context.Context, name string) (string, error) {
 	//какая-то допустим валидация

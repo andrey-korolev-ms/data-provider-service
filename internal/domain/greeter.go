@@ -12,7 +12,7 @@ type SimpleGreeter struct{}
 func NewSimpleGreeter() *SimpleGreeter {
 	return &SimpleGreeter{}
 }
-func (s *SimpleGreeter) SayHallo(name string) string {
+func (s *SimpleGreeter) SayHello(name string) string {
 	if name == "" {
 		name = "World"
 	}
